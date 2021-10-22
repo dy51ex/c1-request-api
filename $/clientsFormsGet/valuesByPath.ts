@@ -2,31 +2,27 @@ import { components, Field, FieldPath } from '../../types';
 import LogAction from '../base/LogAction';
 import valuesByPathFn from '../base/valuesByPath';
 
-// async function valuesByPath(
-//     form: components['schemas']['CaseMap.Modu
-// les.Projects.App.IntakeForm.ViewModels.IntakeObjectDto'],
-//     params: { fieldPath: FieldPath[] }
-// ): Promise<Field['Value'][]>;
+
 async function valuesByPath(
     form: components['schemas']['CaseMap.Modules.Projects.App.IntakeForm.ViewModels.IntakeObjectDto'],
     params: { fieldPath: FieldPath[]; deepValues: true }
-): Promise<[string | boolean | number]>;
+): Promise<ReturnType<typeof valuesByPathFn>>;
 async function valuesByPath(
     form: components['schemas']['CaseMap.Modules.Projects.App.IntakeForm.ViewModels.IntakeObjectDto'],
     params: { grouping: 'blocks' | 'lines'; returnFields: true; fieldPath: FieldPath[] }
-): Promise<Field[][]>;
+): Promise<ReturnType<typeof valuesByPathFn>>;
 async function valuesByPath(
     form: components['schemas']['CaseMap.Modules.Projects.App.IntakeForm.ViewModels.IntakeObjectDto'],
     params: { grouping: 'blocks' | 'lines'; fieldPath: FieldPath[] }
-): Promise<Field['Value'][][]>;
+): Promise<ReturnType<typeof valuesByPathFn>>;
 async function valuesByPath(
     form: components['schemas']['CaseMap.Modules.Projects.App.IntakeForm.ViewModels.IntakeObjectDto'],
     params: { grouping: 'blocks' | 'lines'; fieldPath: FieldPath[]; deepValues: true }
-): Promise<[string | boolean | number][]>;
+): Promise<ReturnType<typeof valuesByPathFn>>;
 async function valuesByPath(
     form: components['schemas']['CaseMap.Modules.Projects.App.IntakeForm.ViewModels.IntakeObjectDto'],
     params: { grouping: 'blocksLines'; returnFields: true; fieldPath: FieldPath[] }
-): Promise<Field[][][]>;
+): Promise<ReturnType<typeof valuesByPathFn>>;
 async function valuesByPath(
     form: components['schemas']['CaseMap.Modules.Projects.App.IntakeForm.ViewModels.IntakeObjectDto'],
     params: {
@@ -34,11 +30,11 @@ async function valuesByPath(
         fieldPath: FieldPath[];
         returnFields: false;
     }
-): Promise<Field['Value'][][][]>;
+): Promise<ReturnType<typeof valuesByPathFn>>;
 async function valuesByPath(
     form: components['schemas']['CaseMap.Modules.Projects.App.IntakeForm.ViewModels.IntakeObjectDto'],
     params: { grouping: 'blocksLines'; fieldPath: FieldPath[]; deepValues: true }
-): Promise<[string | boolean | number][][]>;
+): Promise<ReturnType<typeof valuesByPathFn>>;
 /**
  * Ищет значения по указанному пути (путь можно получить
  * с помошью pathsByName), возвращает массив данных, в зависимости от параметров
@@ -55,7 +51,7 @@ async function valuesByPath(
         returnFields?: boolean;
         deepValues?: boolean;
     },
-): ReturnType<typeof valuesByPathFn> {
+): Promise<ReturnType<typeof valuesByPathFn>> {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const logic = () => valuesByPathFn(form, params);

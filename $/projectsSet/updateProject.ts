@@ -59,7 +59,7 @@ async function updateProject(
       });
     }
   };
-  // @ts-expect-error
+  // @ts-ignore
   return LogAction('$.projectsSet.updateProject', logic);
 }
 export default updateProject;

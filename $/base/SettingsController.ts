@@ -1,66 +1,51 @@
-import axios from 'axios';
+declare function fetch(): any
 
-axios.defaults.baseURL = '';
+// const fetch = fetch || 1;
+const axiosMock = typeof fetch === 'function' ? fetch : null;
 
 export class SettingsController {
-    login: string;
-
-    password: string;
-
-    domain: string;
-
-    token!: string | undefined;
-
-    tokenExpiresIn!: number | undefined;
-
-    constructor(login: string, password: string, domain: string) {
-        this.login = login;
-        this.password = password;
-        this.domain = domain;
-        this.tokenExpiresIn = process.env.expiresIn
-            ? Number.parseInt(process.env.expiresIn, 10)
-            : undefined;
-        this.token = process.env.token
-            ? process.env.token
-            : undefined;
-    }
+    constructor(
+        private login: string,
+        private password: string,
+        private httpAgent: any,
+        public platform: 'case' | 'node',
+        public token?: string,
+        public tokenExpiresIn?: number,
+    ) {}
 
     async getToken(): Promise<string> {
-        if (!this.token) {
-            const timestamp = Date.now();
-            if (!this.tokenExpiresIn || timestamp > this.tokenExpiresIn) {
-                await this.requestToken();
-                if (!this.token) {
-                    throw new Error('connection: cant refresh auth token');
-                }
-                return this.token;
-            }
+        if (this.platform === 'case') {
+            return 'none';
         }
-        if (!this.token) {
-            throw new Error('connection: something wrong with auth token');
+        const timestamp = Date.now();
+        if (!this.token || !this.tokenExpiresIn || timestamp > this.tokenExpiresIn) {
+            const tokenn = await this.requestAndStoreToken();
+            if (!tokenn) {
+                throw new Error('connection: cant refresh auth token');
+            }
+            return tokenn;
         }
         return this.token;
     }
 
-    async requestToken(): Promise<void> {
+    async requestAndStoreToken(): Promise<string> {
         try {
             const timestamp = Date.now();
             const response = (
-                await axios.post('/api/ThirdPartyAuth/Login', {
+                await this.httpAgent.post('/api/ThirdPartyAuth/Login', {
                     Login: this.login,
                     Password: this.password,
                     RememberMe: true,
                     ProviderName: 'IDE',
                 })
-            ).data as { Token: { access_token: string }, expires_in: string };
+            ).data as { Token: { access_token: string, expires_in: string } };
             this.token = response.Token.access_token;
-            console.log(this.token);
-            const expiresIn = timestamp + parseInt(`${response.expires_in}000`, 10);
+            const expiresIn = timestamp + parseInt(`${response.Token.expires_in}000`, 10);
             this.tokenExpiresIn = expiresIn;
-            process.env.tokenExpiresIn = this.tokenExpiresIn.toString();
             console.log('New token catched');
+            return this.token;
         } catch (error) {
-            console.warn(`Token not received, possible bad auth - ${(error as Error).message}`);
+            throw new Error('Token not received, possible bad auth');
         }
     }
 }
@@ -69,20 +54,39 @@ interface Settings {
     controller: SettingsController,
     version: number | undefined,
     debug: boolean,
+    platform: 'case' | 'node',
+    httpAgent: any,
 }
 
 export const settings = {} as Settings;
 
-export const useSettingsStore = (
-    login: string, password: string,
+export const useSettingsStore = (params: {
+    login: string,
+    password: string,
     domain: string,
-    version = undefined,
-    debug = false,
-): void => {
-    axios.defaults.baseURL = domain;
-    settings.controller = new SettingsController(login, password, domain);
-    settings.version = version;
-    settings.debug = debug;
+    version?: number,
+    debug?: boolean,
+    token?: string,
+    tokenExpiresIn?: number,
+    platform?: 'case' | 'node',
+}): Settings => {
+    settings.version = params.version;
+    settings.debug = params.debug || false;
+    let httpAgent;
+    if (params.platform !== 'case') {
+        httpAgent = require('axios');
+        httpAgent.defaults.baseURL = params.domain;
+    } else {
+        httpAgent = axiosMock;
+    }
+    settings.httpAgent = httpAgent;
+    settings.controller = new SettingsController(
+        params.login,
+        params.password,
+        httpAgent,
+        params.platform || 'node',
+        params.token,
+        params.tokenExpiresIn,
+    );
+    return settings;
 };
-
-export { axios };

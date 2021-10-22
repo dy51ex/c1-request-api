@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
     "incremental": true,
-    "target": "es6",
-    "module": "commonjs",
+    "target": "esnext",
+    "module": "ES2020",
     "lib": [
-      "ESNext"
+      "ESNext",
+      "DOM",
     ],
     "allowJs": true,
     "sourceMap": true,

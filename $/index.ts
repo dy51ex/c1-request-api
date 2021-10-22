@@ -5,6 +5,7 @@ import getFormValuesByName from './clientsFormsGet/valuesByName';
 import getFormValuesByPath from './clientsFormsGet/valuesByPath';
 // dicts
 import getDicts from './dictionaryGet/dicts';
+import getDictValues from './dictionaryGet/dictValues';
 import setCreateDict from './dictionarySet/createDict';
 import setDeleteDict from './dictionarySet/deleteDict';
 // projectsBlocks
@@ -38,6 +39,9 @@ import debug from './utils/debug';
 import uuidv4 from './utils/uuidv4';
 // api-settins
 import { settings, useSettingsStore } from './base/SettingsController';
+// public
+import objectsGet from './objects/get';
+import objectsPatch from './objects/patch';
 
 /**
  * @author Artur Arslanov <a.arslanov@pravo.tech>
@@ -46,66 +50,9 @@ import { settings, useSettingsStore } from './base/SettingsController';
  * @namespace $
  */
 
-export default {
-    clientsFormsGet: {
-        formById: getFormById,
-        formPathsByName: getFormPathsByName,
-        formValuesByName: getFormValuesByName,
-        formValuesByPath: getFormValuesByPath,
-    },
-    dictionaryGet: {
-        dicts: getDicts,
-    },
-    dictionarySet: {
-        createDict: setCreateDict,
-        dleteDict: setDeleteDict,
-    },
-    projectsBlocksGet: {
-        pathsByName: getProjectPathsByName,
-        valuesByName: getProjectValuesByName,
-        valuesByPath: getProjectValuesByPath,
-    },
-    projectsBlocksSet: {
-        valueToBlock: setProjectValueToBlock,
-    },
-    projectsGet: {
-        projectBlocksTypes: getProjectProjectBlocksTypes,
-        projectById: getProjectProjectById,
-        projectClasses: getProjectProjectClasses,
-        projectSettings: getProjectProjectSettings,
-        projectTypes: getProjectProjectTypes,
-        projectsByFilters: getProjectProjectsByFilters,
-        relatedProjects: getProjectRelatedProjects,
-    },
-    projectsSet: {
-        createProject: setProjectCreateProject,
-        createProjectClass: setProjectCreateProjectClass,
-        deleteProject: setProjectDeleteProject,
-        deleteProjectClass: setProjectDeleteProjectClass,
-        projectSettings: setProjectProjectSettings,
-        relatedProject: setProjectRelatedProject,
-        updateProject: setProjectUpdateProject,
-    },
-    scriptsGet: {
-        scriptTypes: getScriptTypes,
-    },
-    settingsGet: {
-        generalSettings: getGeneralSettings,
-    },
-    settingsSet: {
-        generalSettings: setGeneralSettings,
-    },
-    utils: {
-        debug,
-        uuidv4,
-    },
-    connection: {
-        settings,
-        useSettingsStore,
-    },
-};
-
 export {
+    objectsGet,
+    objectsPatch,
     // forms
     getFormById,
     getFormPathsByName,
@@ -115,6 +62,7 @@ export {
     getDicts,
     setCreateDict,
     setDeleteDict,
+    getDictValues,
     // projectsBlocks
     getProjectPathsByName,
     getProjectValuesByName,

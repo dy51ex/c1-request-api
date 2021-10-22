@@ -10,5 +10,8 @@ export default (
         return;
     }
     const dataString = typeof data === 'string' ? data : data?.Error;
+    if (level !== 'Error') {
+        return;
+    }
     console.log(`${level}: [${method}]{${state}} - ${dataString || ''}`);
 };

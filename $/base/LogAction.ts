@@ -6,7 +6,6 @@ export default async <T>(name: string, logic: () => T | Promise<T>): Promise<T> 
     try {
         result = await logic();
     } catch (err) {
-        console.log(err);
         let error: string;
         try {
             error = JSON.stringify(err);
@@ -14,7 +13,7 @@ export default async <T>(name: string, logic: () => T | Promise<T>): Promise<T> 
             error = err as string;
         }
         debug('Error', name, 'progress', error);
-        throw new Error(`ERROR: ${name} - ${error}`);
+        throw err;
     }
     debug('Info', name, 'ended', JSON.stringify(result));
     return result;
