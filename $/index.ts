@@ -40,7 +40,7 @@ import uuidv4 from './utils/uuidv4';
 // api-settins
 import { settings, useSettingsStore } from './base/SettingsController';
 // public
-import objectsGet from './objects/get';
+import objectsGet, { Case } from './objects/get';
 import objectsPatch from './objects/patch';
 
 /**
@@ -51,6 +51,9 @@ import objectsPatch from './objects/patch';
  */
 
 export {
+    // helpers
+    Case,
+    // object, v2
     objectsGet,
     objectsPatch,
     // forms

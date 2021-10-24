@@ -623,6 +623,7 @@
                 url: '/api/ProjectTypes/GetProjectTypes',
                 body: { PageSize: 999 },
             });
+            console.log(1231231, response);
             if (projectTypeName) {
                 const projectType = response.find((type) => type.Name === projectTypeName);
                 if (!projectType)
@@ -983,6 +984,7 @@
         return new Case(await LogAction("$.objects.get", logic));
     }
 
+    exports.Case = Case;
     exports.debug = debug;
     exports.getDictValues = dictValues;
     exports.getDicts = dicts;
